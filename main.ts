@@ -24,10 +24,26 @@ app.all("/graphql", async (c) => {
   headers.set("Content-Type", "application/json");
   headers.set("apollo-require-preflight", "true");
 
+  let body;
+  if (c.req.method === "GET") {
+    // For GET requests, we need to construct the query from URL parameters
+    const params = new URL(c.req.url).searchParams;
+    body = JSON.stringify({
+      query: params.get("query"),
+      variables: params.get("variables")
+        ? JSON.parse(params.get("variables")!)
+        : undefined,
+      operationName: params.get("operationName"),
+    });
+  } else {
+    // For POST requests, we can use the request body directly
+    body = await c.req.text();
+  }
+
   const response = await fetch(url, {
-    method: c.req.method,
+    method: "POST", // Always use POST for the internal request
     headers: headers,
-    body: c.req.body,
+    body: body,
   });
 
   // Set the response status and headers
