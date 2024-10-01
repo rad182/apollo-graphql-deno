@@ -13,11 +13,17 @@ const app = new Hono();
 
 app.get("/", (c) => c.text("Hello Deno!"));
 
-// Add a new route for GraphQL
+// Update the GraphQL route
 app.all("/graphql", async (c) => {
   const { url } = await startStandaloneServer(server, {
     listen: { port: 0 },
   });
+
+  // Set the Content-Type header to application/json
+  c.req.headers.set("Content-Type", "application/json");
+
+  // Add the apollo-require-preflight header
+  c.req.headers.set("apollo-require-preflight", "true");
 
   const response = await fetch(url, {
     method: c.req.method,
