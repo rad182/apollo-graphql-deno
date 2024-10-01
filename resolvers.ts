@@ -1,16 +1,19 @@
-import { ApolloServer } from "npm:@apollo/server@^4.1";
-import { startStandaloneServer } from "npm:@apollo/server@4.1/standalone";
-import { graphql } from "npm:graphql@16.6";
-import { typeDefs } from "./schema.ts";
-import { resolvers } from "./resolvers.ts";
+const dinosaurs = [
+  {
+    name: "Aardonyx",
+    description: "An early stage in the evolution of sauropods.",
+  },
+  {
+    name: "Abelisaurus",
+    description: '"Abel\'s lizard" has been reconstructed from a single skull.',
+  },
+];
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 8000 },
-});
-
-console.log(`Server running on: ${url}`);
+export const resolvers = {
+  Query: {
+    dinosaurs: () => dinosaurs,
+    dinosaur: (_: any, args: any) => {
+      return dinosaurs.find((dinosaur) => dinosaur.name === args.name);
+    },
+  },
+};
