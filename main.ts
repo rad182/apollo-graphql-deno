@@ -38,4 +38,4 @@ console.log(`🚀 Server ready at http://localhost:${PORT}`);
 console.log(
   `🚀 GraphQL endpoint available at http://localhost:${PORT}/graphql`
 );
-await app.listen({ port: PORT });
+Deno.serve({ port: PORT }, app.fetch);
