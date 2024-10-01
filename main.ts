@@ -19,23 +19,25 @@ app.all("/graphql", async (c) => {
     listen: { port: 0 },
   });
 
-  // Set the Content-Type header to application/json
-  c.req.headers.set("Content-Type", "application/json");
-
-  // Add the apollo-require-preflight header
-  c.req.headers.set("apollo-require-preflight", "true");
+  // Create a new headers object with the required headers
+  const headers = new Headers(c.req.headers);
+  headers.set("Content-Type", "application/json");
+  headers.set("apollo-require-preflight", "true");
 
   const response = await fetch(url, {
     method: c.req.method,
-    headers: c.req.headers,
+    headers: headers,
     body: c.req.body,
   });
 
+  // Set the response status and headers
   c.status(response.status);
   c.header(
     "Content-Type",
     response.headers.get("Content-Type") || "application/json"
   );
+
+  // Return the response body
   return c.body(response.body);
 });
 
