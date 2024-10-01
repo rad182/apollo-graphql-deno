@@ -5,6 +5,7 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "hono": "npm:hono"
+    "hono": "npm:hono",
+    "@hono/graphql-server": "npm:@hono/graphql-server"
   }
 }
